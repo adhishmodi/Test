@@ -136,3 +136,54 @@ The project owner confirmed the following on 2026-11-18:
 - Comments: approve the proposed architecture, subject to documented risks and licensing review.
 
 **Overall status: Architecture approved. Implementation not authorized.**
+
+
+---
+
+## P3 design records — 2026-11-18
+
+The following records capture design proposals documented in P3. Items explicitly marked **Provisional** are not implementation authorization and must be confirmed at the relevant implementation gate.
+
+### ADR-017 — Session-scoped history
+
+- **Status:** Provisional design proposal
+- **Decision:** Start with browser-session-scoped job history; do not imply account-backed or cross-device persistence.
+- **Rationale:** Consistent with no mandatory login in the initial release.
+- **Gate:** Confirm session lifecycle, recovery behavior and retention before implementation.
+
+### ADR-018 — Initial job progress delivery
+
+- **Status:** Provisional design proposal
+- **Decision:** Use bounded HTTP polling for job status initially.
+- **Rationale:** Simple to operate and sufficient for an initial asynchronous job workflow.
+- **Gate:** Set polling interval, progress granularity and rate limits based on API/worker behavior. Server-sent events may be reconsidered if measured need justifies them.
+
+### ADR-019 — Initial webcam transport
+
+- **Status:** Provisional, conditional on benchmark
+- **Decision:** Evaluate bounded HTTP frame submissions before adopting a persistent streaming transport.
+- **Rationale:** Keeps the first design understandable and avoids assuming WebSocket/streaming infrastructure.
+- **Gate:** Validate latency, bandwidth, browser behavior, frame limits and hosting capacity. This is not a real-time performance commitment.
+
+### ADR-020 — Export formats
+
+- **Status:** Provisional design proposal
+- **Decision:** Plan for CSV statistics and a JSON summary export.
+- **Rationale:** Both are straightforward formats for tabular and structured analysis results.
+- **Gate:** Freeze exact fields, privacy filtering and download behavior before implementation.
+
+### ADR-021 — Retention targets
+
+- **Status:** Provisional; requires explicit implementation-time confirmation
+- **Decision:** Evaluate a 24-hour maximum target for temporary media after completion and a 30-day target for job metadata/aggregate results.
+- **Rationale:** Provides a concrete starting point for privacy, cleanup and storage-cost design.
+- **Gate:** Confirm operational feasibility, user-facing disclosure and deletion guarantees before implementation. These targets are not current enforced policy.
+
+### ADR-022 — No cancellation endpoint in initial contract
+
+- **Status:** Provisional design constraint
+- **Decision:** Do not expose job cancellation until queue/worker cancellation, partial-artifact cleanup and retry semantics are designed and tested.
+- **Rationale:** A UI/API cancellation control without reliable worker cancellation would misrepresent behavior.
+- **Gate:** Revisit only with a tested worker lifecycle design.
+
+**P3 status:** UI, database and API designs are documented. The above provisional items remain subject to implementation-time confirmation. No source code, dependencies, database schema, production settings, merge or deployment is authorized by these records.
