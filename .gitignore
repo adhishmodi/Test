@@ -47,9 +47,6 @@ weights/
 *.avi
 *.mkv
 *.webm
-*.jpg
-*.jpeg
-*.png
 
 # Editors and operating systems
 .vscode/*
