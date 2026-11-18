@@ -175,9 +175,9 @@ The following records capture design proposals documented in P3. Items explicitl
 ### ADR-021 — Retention targets
 
 - **Status:** Provisional; requires explicit implementation-time confirmation
-- **Decision:** Evaluate a 24-hour maximum target for temporary media after completion and a 30-day target for job metadata/aggregate results.
-- **Rationale:** Provides a concrete starting point for privacy, cleanup and storage-cost design.
-- **Gate:** Confirm operational feasibility, user-facing disclosure and deletion guarantees before implementation. These targets are not current enforced policy.
+- **Decision:** Delete raw uploaded input footage after processing by default, as required by the SRS. Webcam frames remain ephemeral. If processed output media must be retained for result viewing, evaluate a maximum 24-hour temporary-retention target; evaluate 30 days for job metadata and aggregate results.
+- **Rationale:** Preserves the approved privacy requirement while giving the UI a bounded way to offer processed outputs.
+- **Gate:** Confirm exact output retention, metadata retention, cleanup guarantees and user-facing disclosure before implementation. The 24-hour and 30-day targets are provisional and are not current enforced policy.
 
 ### ADR-022 — No cancellation endpoint in initial contract
 
