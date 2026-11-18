@@ -1,0 +1,138 @@
+# Architecture Decision Records (ADRs)
+
+| Field | Value |
+|---|---|
+| Project | Intelligent Traffic Monitoring System |
+| ADR set version | 1.0 |
+| Status | Approved architecture baseline |
+| Approval date | 2026-11-18 |
+| Requirements baseline | SRS v1.0 |
+
+This file records architectural decisions approved by the project owner. A decision marked **provisional** is an approved direction for planning, but a technical choice remains conditional on benchmarking, feasibility or licensing review.
+
+## ADR-001 — Primary language: Python
+
+- **Status:** Approved
+- **Decision:** Use Python for backend and computer-vision components.
+- **Rationale:** Strong ecosystem for PyTorch, OpenCV, detection, tracking and evaluation.
+- **Consequences:** Python dependencies must be pinned and reviewed; training and inference environments must be reproducible.
+
+## ADR-002 — Deep-learning framework: PyTorch
+
+- **Status:** Approved
+- **Decision:** Use PyTorch as the primary deep-learning framework.
+- **Rationale:** Suitable pretrained-model and fine-tuning ecosystem.
+- **Consequences:** Record framework/CUDA versions and training configuration.
+
+## ADR-003 — Detector: benchmark a YOLO-family candidate
+
+- **Status:** Provisional pending benchmark and license review
+- **Decision:** Start research with a suitable pretrained YOLO-family detector.
+- **Alternatives:** RT-DETR and Faster R-CNN.
+- **Rationale:** Candidate balance of speed, detection quality and available tooling.
+- **Conditions:** Exact model, package, version, weight license and deployment terms must be reviewed before adoption. If licensing is incompatible, evaluate an alternative.
+- **Consequences:** Do not treat a YOLO-family choice or its license as finally selected until the gate is passed.
+
+## ADR-004 — Tracking: ByteTrack initial candidate
+
+- **Status:** Provisional pending comparative evaluation
+- **Decision:** Use ByteTrack as the initial tracking candidate and compare with BoT-SORT.
+- **Alternatives:** BoT-SORT, DeepSORT.
+- **Rationale:** ByteTrack offers a comparatively straightforward tracking pipeline.
+- **Consequences:** Validate ID consistency, IDF1/HOTA/MOTA where supported, and failure cases before locking configuration.
+
+## ADR-005 — Image and video processing: OpenCV
+
+- **Status:** Approved
+- **Decision:** Use OpenCV for media decoding, frame extraction, preprocessing and video output.
+- **Consequences:** Enforce format, dimension, duration and resource limits.
+
+## ADR-006 — Backend: FastAPI
+
+- **Status:** Approved
+- **Decision:** Use FastAPI for REST endpoints and API validation.
+- **Rationale:** Typed request/response validation, asynchronous support and generated OpenAPI documentation.
+- **Consequences:** Keep long-running inference out of API request handlers.
+
+## ADR-007 — Frontend: React + TypeScript
+
+- **Status:** Approved by project owner
+- **Decision:** Use React with TypeScript.
+- **Alternatives:** Streamlit and Gradio.
+- **Rationale:** More flexible interactive dashboard, video overlays, charts and responsive UI.
+- **Consequences:** Maintain frontend/backend API contracts and typed client models.
+
+## ADR-008 — Database: PostgreSQL
+
+- **Status:** Approved by project owner
+- **Decision:** Use PostgreSQL for job metadata, aggregated metrics and model-version metadata.
+- **Alternative:** SQLite for lightweight local-only development.
+- **Rationale:** Relational integrity and deployed persistence.
+- **Consequences:** No raw video/image payloads in the relational database. Use temporary private storage for media.
+
+## ADR-009 — Asynchronous processing: Redis queue and separate worker
+
+- **Status:** Approved architectural direction; deployment details subject to feasibility
+- **Decision:** Separate API request handling from video inference using a Redis-backed queue and Python worker.
+- **Rationale:** Avoid blocking API requests and allow independent worker scaling.
+- **Consequences:** Requires job lifecycle, retries, failure handling, concurrency limits and cleanup policy. Start with one worker.
+
+## ADR-010 — Training environment: Google Colab
+
+- **Status:** Approved
+- **Decision:** Use Google Colab for GPU-dependent fine-tuning.
+- **Rationale:** No local GPU is available; Codespaces is not assumed to provide GPU resources.
+- **Consequences:** Preserve reproducible training scripts/configuration and document hardware/runtime.
+
+## ADR-011 — Development environment: GitHub Codespaces
+
+- **Status:** Approved
+- **Decision:** Support development and lightweight CPU-based demonstrations in GitHub Codespaces.
+- **Consequences:** Provide a documented development container and setup instructions during the setup phase.
+
+## ADR-012 — Public hosting: defer selection
+
+- **Status:** Approved by project owner
+- **Decision:** Choose the public hosting provider only after benchmarking.
+- **Candidates:** General application hosting with a separate worker/database, and ML-focused hosting.
+- **Rationale:** Video inference performance, resource limits and cost are not yet known.
+- **Consequences:** Keep configuration provider-neutral where practical. Compare CPU/GPU, memory, storage, upload limits, worker duration, concurrency, webcam latency and total cost before recommending a provider.
+
+## ADR-013 — Authentication: no mandatory login initially
+
+- **Status:** Approved by project owner
+- **Decision:** Do not require user registration/login in the initial release.
+- **Rationale:** User accounts are not required by the approved SRS.
+- **Consequences:** Use job-scoped access controls, opaque high-entropy short-lived tokens/session binding, rate limits and protected administrative operations. A job UUID alone is not authorization.
+
+## ADR-014 — Media storage and privacy
+
+- **Status:** Approved
+- **Decision:** Do not retain raw uploaded footage or webcam frames by default. Use private temporary storage with expiry and deletion.
+- **Rationale:** Align with SRS privacy requirements and reduce exposure.
+- **Consequences:** Define retention windows, cleanup of failed/abandoned jobs and deletion behavior before implementation.
+
+## ADR-015 — Density and congestion semantics
+
+- **Status:** Approved methodology direction; thresholds require validation
+- **Decision:** Distinguish cumulative unique vehicle counts from current ROI occupancy. Use an image-space ROI density indicator and configurable low/moderate/high congestion thresholds.
+- **Rationale:** Prevent frame detections from being mistaken for unique vehicles and avoid claiming physical density without calibration.
+- **Consequences:** Document ROI, camera assumptions, threshold calibration and evaluation limitations.
+
+## ADR-016 — Scope and implementation approval boundary
+
+- **Status:** Approved
+- **Decision:** This architecture approval authorizes architecture documentation and planning only.
+- **Not authorized:** Source-code implementation, dependency installation, database/schema changes, production configuration changes, PR merges or deployment.
+- **Consequence:** Each implementation batch and every high-impact action must receive the separate approval required by the project workflow.
+
+## Approval record
+
+The project owner confirmed the following on 2026-11-18:
+- Frontend: React + TypeScript.
+- Hosting: choose after benchmarking.
+- Database: PostgreSQL.
+- Authentication: no mandatory login initially.
+- Comments: approve the proposed architecture, subject to documented risks and licensing review.
+
+**Overall status: Architecture approved. Implementation not authorized.**
