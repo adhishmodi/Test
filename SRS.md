@@ -4,7 +4,8 @@
 | Document field | Value |
 |---|---|
 | Version | 1.0 |
-| Status | Draft — pending owner approval |
+| Status | Approved by project owner |
+| Approval | 2026-11-18 |
 | Domain | Deep Learning / Computer Vision |
 | Project type | Portfolio-grade academic application |
 | Target environment | Urban roads |
@@ -272,4 +273,4 @@ Potential future features, subject to separate requirements and feasibility revi
 
 ---
 
-**Approval state:** Draft finalized for review. The project owner must approve this SRS before architecture decisions are treated as a committed implementation baseline.
+**Approval state:** Approved by the project owner on 2026-11-18. This SRS is the baseline for architecture and technology design.
