@@ -187,3 +187,28 @@ The following records capture design proposals documented in P3. Items explicitl
 - **Gate:** Revisit only with a tested worker lifecycle design.
 
 **P3 status:** UI, database and API designs are documented. The above provisional items remain subject to implementation-time confirmation. No source code, dependencies, database schema, production settings, merge or deployment is authorized by these records.
+
+
+---
+
+## P5 research recommendations — 2026-11-18
+
+### ADR-023 — Primary dataset: BDD100K
+
+- **Status:** Recommended; owner confirmation and data validation pending
+- **Decision:** Use BDD100K labelled images as the initial detector fine-tuning dataset. Use its separate MOT 2020 subset for later tracking evaluation.
+- **Rationale:** Urban driving scenes, all four required vehicle categories, weather/time-of-day diversity, and dedicated tracking annotations.
+- **Alternatives:** MS COCO 2017 (general scenes, not traffic-specific) and KITTI (does not directly cover the complete four-class requirement).
+- **Conditions:** Dataset terms are separate from toolkit-code licensing. Educational/research/not-for-profit use is permitted subject to stated terms; obtain permission before commercial use or redistribution. Validate actual annotation counts, splits and class mapping after download.
+- **Consequences:** Do not commit dataset media/labels to Git. Keep the official license notice and record source/checksums.
+
+### ADR-024 — Detector and tracker baseline candidates
+
+- **Status:** Recommended baseline; benchmark and exact checkpoint/license verification pending
+- **Decision:** Start with YOLOX-S (PyTorch) initialized from an official COCO-pretrained checkpoint; use ByteTrack as the initial tracker candidate. Compare RT-DETRv2-R18 as a detector alternative.
+- **Rationale:** YOLOX has a PyTorch implementation, custom-dataset training guidance and an Apache-2.0 repository license; ByteTrack provides a comparatively simple tracking baseline.
+- **Alternatives:** RT-DETRv2-R18; Ultralytics YOLO family.
+- **Conditions:** Verify exact checkpoint, pretrained-data, package and dependency terms independently. Ultralytics licensing is not assumed acceptable; its current default AGPL-3.0 obligations must be reviewed.
+- **Consequences:** Do not install dependencies, train, export or distribute weights until the owner approves the implementation batch and license checks are complete.
+
+**P5 status:** Research documents added on the feature branch. Recommendations remain subject to owner review; no training or implementation is authorized by these ADRs.
