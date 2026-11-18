@@ -259,13 +259,14 @@ Synthetic example only:
 SRS requires raw uploaded footage and webcam frames not be retained by default after processing. Exact durations are not specified in the approved baseline.
 
 Provisional proposal for later implementation approval:
-- Input/processed media: target maximum 24 hours after completion; earlier deletion on user request.
-- Job metadata and aggregate results: target 30 days.
-- Webcam frames: ephemeral processing buffers only.
+- Raw uploaded input footage: delete after processing by default, consistent with the SRS; do not retain it for a general 24-hour window.
+- Webcam frames: ephemeral processing buffers only; discard after frame processing.
+- Processed output media/annotated artifacts: if retained to support result viewing, use private temporary storage with a proposed maximum 24-hour expiry after completion.
+- Job metadata and aggregate results: proposed 30-day target.
 - Failed/abandoned uploads: bounded expiry and cleanup.
-- Access grants: expire no later than associated data.
+- Access grants: expire no later than the associated resource and be revoked on deletion.
 
-These are design targets, not an assertion of current enforcement. Confirm before implementation.
+The 24-hour and 30-day values are provisional targets, not current enforced policy. Confirm exact behavior before implementation. The SRS default for raw input footage takes precedence over convenience retention. Confirm before implementation.
 
 Deletion sequence:
 1. Authorize using session/job grant.
