@@ -1,0 +1,25 @@
+{
+  "name": "Intelligent Traffic Monitoring",
+  "dockerComposeFile": "../compose.yaml",
+  "service": "workspace",
+  "runServices": ["workspace", "postgres", "redis"],
+  "workspaceFolder": "/workspaces/Test",
+  "shutdownAction": "stopCompose",
+  "forwardPorts": [8000, 5173],
+  "portsAttributes": {
+    "8000": {"label": "FastAPI", "onAutoForward": "notify"},
+    "5173": {"label": "Vite frontend", "onAutoForward": "notify"}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "charliermarsh.ruff",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode"
+      ]
+    }
+  },
+  "remoteUser": "vscode"
+}
