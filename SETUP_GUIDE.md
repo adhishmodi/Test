@@ -1,12 +1,13 @@
 # Development Setup — Intelligent Traffic Monitoring System
 
-This guide describes the initial Codespaces development environment. The P4 foundation batch provides the development container, PostgreSQL, Redis, environment template and Git ignore rules. Python/frontend dependency manifests and application entry points are added in later approved batches.
+This guide describes the initial Codespaces environment and application scaffold.
 
 ## Prerequisites
 
 - GitHub account with Codespaces access.
-- Docker support in the development environment.
-- No local GPU is required for setup. GPU training/fine-tuning is planned for Google Colab.
+- Docker support in the development container.
+- Python 3.12, Node.js 26, uv, npm and Docker CLI are provided by the Codespaces environment.
+- No local GPU is required; GPU-dependent fine-tuning is planned for Google Colab.
 
 ## 1. Create the Codespace
 
@@ -15,17 +16,33 @@ This guide describes the initial Codespaces development environment. The P4 foun
 3. Wait for the development container to build.
 4. The workspace, PostgreSQL and Redis services are started by Compose.
 
-## 2. Configure local environment
+## 2. Configure environment
 
 From the repository root:
 
 ```bash
 cp .env.example .env
+cp frontend/.env.example frontend/.env
 ```
 
-The values in `.env.example` are development-only placeholders. Do not use them in a public deployment and do not commit `.env`.
+The values are development-only placeholders. Never commit either `.env` file or use the sample credentials in a public deployment.
 
-## 3. Check supporting services
+## 3. Install dependencies
+
+```bash
+cd backend
+uv sync --group dev
+cd ../frontend
+npm install
+```
+
+The first install resolves dependencies and generates `backend/uv.lock` and `frontend/package-lock.json`. Commit both lock files with dependency changes. Subsequent installs should use the lock files (`uv sync --locked --group dev` and `npm ci`).
+
+ML framework/model packages are intentionally not included yet. The detector, weights, tracking implementation and license review remain separate decisions.
+
+## 4. Start supporting services
+
+From the repository root:
 
 ```bash
 docker compose ps
@@ -35,32 +52,58 @@ docker compose exec redis redis-cli ping
 
 Expected checks: PostgreSQL reports that it is accepting connections and Redis responds with `PONG`.
 
-The database and Redis are reachable from the workspace using the Compose hostnames `postgres` and `redis`.
+## 5. Run the backend
 
-## 4. Application commands (after later setup batches)
-
-The following commands become available after the Python and frontend manifests and application entry points are added:
+In a terminal:
 
 ```bash
-uv sync --group dev
-cd frontend && npm ci
+cd backend
+uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-Backend and frontend start commands, Alembic migrations, RQ worker startup, health endpoints and automated test commands will be documented when their corresponding application components exist.
+- Liveness: `GET /api/v1/health`
+- Readiness: `GET /api/v1/health/ready`
+- Development API docs: `/docs`
 
-**Database note:** `DATABASE_DESIGN.md` is the authoritative logical schema. This setup batch does not create tables or migrations. Do not run `alembic upgrade head` until an approved initial migration is added.
+Readiness checks PostgreSQL and Redis. It returns HTTP 503 if either dependency is unavailable.
 
-## 5. Data and security precautions
+## 6. Run the frontend
 
-- Keep real secrets in local environment files or the deployment secret manager, never in Git.
-- PostgreSQL and Redis are internal Compose services and have no published host ports.
-- Use only synthetic or appropriately licensed sample media during development.
-- Do not commit datasets, uploaded footage, generated videos or model weights.
-- Raw uploaded footage and webcam frames must not be retained by default, as required by the SRS.
-- Temporary artifacts and retention cleanup require their own implementation and verification.
+In another terminal:
 
-## 6. Troubleshooting
+```bash
+cd frontend
+npm run dev -- --host 0.0.0.0
+```
 
-- If a service is still starting, run `docker compose ps` and inspect logs with `docker compose logs postgres` or `docker compose logs redis`.
-- To stop services, run `docker compose down`.
-- To stop services and delete the local database/Redis volumes, run `docker compose down -v`. **This permanently deletes local development data; use only when you intend to reset it.**
+Open the forwarded Vite port (5173). Vite proxies `/api` requests to the FastAPI service on port 8000.
+
+The current dashboard is a UI scaffold only; image/video submission, job processing, tracking and analytics are not implemented yet.
+
+## 7. Run checks
+
+```bash
+cd backend
+uv run ruff check .
+uv run pytest
+cd ../frontend
+npm run typecheck
+npm run build
+```
+
+## 8. Database and data precautions
+
+- `DATABASE_DESIGN.md` is the authoritative logical schema.
+- This batch does not create SQLAlchemy models, Alembic migrations or database tables. Do not run `alembic upgrade head` yet.
+- PostgreSQL and Redis are internal Compose services; their ports are not published to the host.
+- Use only synthetic or appropriately licensed sample media.
+- Do not commit datasets, uploads, generated videos or model weights.
+- Raw uploaded footage and webcam frames must not be retained by default.
+- Temporary artifact retention and deletion guarantees require separate implementation and verification.
+
+## 9. Troubleshooting
+
+- Inspect service state with `docker compose ps`.
+- Inspect logs with `docker compose logs postgres` or `docker compose logs redis`.
+- Stop services with `docker compose down`.
+- `docker compose down -v` deletes local database and Redis data permanently; use only when intentionally resetting the environment.
