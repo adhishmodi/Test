@@ -17,5 +17,6 @@ All notable project documentation and implementation changes are recorded here.
 - Added `DATABASE_DESIGN.md` with the proposed PostgreSQL logical schema, relationships, lifecycle, retention/deletion design and SRS traceability.
 - Added `API_SPECIFICATION.md` with proposed REST contracts for image/video jobs, status/results, analytics, export, webcam sessions, health and worker integration.
 - Recorded provisional P3 decisions and implementation gates in `DECISIONS.md`.
+- Explicitly aligned raw-input deletion with the SRS privacy requirement; 24-hour processed-output and 30-day metadata targets remain provisional.
 - Kept `ARCHITECTURE.md` unchanged because the P3 detail is appropriately captured in the dedicated design specifications.
 - Documentation only: no source code, dependencies, migrations, secrets, deployment settings or production services changed. No merge or deployment performed.
