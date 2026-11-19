@@ -4,12 +4,12 @@
 |---|---|
 | Project | Intelligent Traffic Monitoring System |
 | Phase | P5 — Dataset Research and Model Baseline |
-| Status | Research recommendation; owner confirmation required before training |
+| Status | Owner-selected primary dataset; data validation pending |
 | Research date | 2026-11-18 |
 
 ## 1. Requirements
 
-The dataset must support urban-road vehicle detection for **car, motorcycle, bus and truck**. It should provide varied road scenes, reliable bounding boxes, a defensible train/validation/test strategy and clear usage terms. Video tracking annotations are desirable for the later tracking evaluation.
+The dataset must support urban-road vehicle detection for **car, motorcycle, bus and truck**. It should provide varied road scenes, reliable bounding boxes, a defensible training, validation and held-out evaluation strategy and clear usage terms. Video tracking annotations are desirable for the later tracking evaluation.
 
 ## 2. Candidate comparison
 
@@ -19,7 +19,9 @@ The dataset must support urban-road vehicle detection for **car, motorcycle, bus
 | **MS COCO 2017** | Widely used pretrained-detection benchmark; contains car, motorcycle, bus and truck; convenient for checking transfer-learning compatibility | General everyday imagery rather than a traffic-monitoring dataset; not sufficient alone to represent fixed urban-road cameras or traffic sequences | Use only as pretrained-weight provenance / optional secondary comparison, not as the project dataset |
 | **KITTI** | Real-world driving imagery with object-detection and tracking research resources | Its common 2D detection classes do not directly provide the complete four-class mapping required here; smaller scope and different sensor/camera setup | Not selected as primary |
 
-## 3. Primary recommendation — BDD100K
+## 3. Selected primary dataset — BDD100K
+
+**Owner decision (2026-11-19): BDD100K is approved as the primary dataset for the initial detector baseline.** MIO-TCD is optional for a later, separately reviewed experiment and is excluded from the initial baseline. This decision approves the dataset choice for planning; it does not authorize downloading or processing the data.
 
 Official resources:
 - Dataset and download documentation: https://doc.bdd100k.com/download.html
@@ -34,15 +36,17 @@ BDD100K is the best initial fit because it is a driving dataset, includes the fo
 
 1. Download the **100K Images** and the recommended **Detection 2020 Labels** for object detection.
 2. Do not download the full 1.8 TB video archive for the first detector experiment.
-3. For later tracking work, separately obtain the **MOT 2020 Images** and **MOT 2020 Labels** subset. The official documentation describes this as a subset of the videos resampled to 5 Hz, with training and validation labels.
-4. Record the exact official download package, date, checksum and license notice in the experiment manifest.
+3. MIO-TCD is not part of the initial dataset. Reconsider it only if BDD100K validation exposes a specific coverage gap and its separate license and class mapping are reviewed.
+4. Do not download the optional supplementary dataset as part of the initial baseline.
+5. For later tracking work, separately obtain the **MOT 2020 Images** and **MOT 2020 Labels** subset. The official documentation describes this as a subset of the videos resampled to 5 Hz, with training and validation labels.
+6. Record the exact official download package, date, checksum and license notice in the experiment manifest.
 
 ### 3.2 Class mapping
 
 | Project class | BDD100K detection category |
 |---|---|
 | car | car |
-| motorcycle | motorcycle (shown as `motorcycle` in the official category list; some dataset exports may abbreviate it as `motor`) |
+| motorcycle | motorcycle |
 | bus | bus |
 | truck | truck |
 
@@ -52,8 +56,8 @@ Map only these four categories for the initial project detector. Ignore other ca
 
 - Use the official labelled training images as the source training pool.
 - Create a validation subset from the official training pool using a fixed, recorded random seed.
-- Keep the official labelled validation split untouched as the final held-out detector test set.
-- Do not use the unlabelled official test images for metric calculation.
+- Keep the official labelled validation split untouched as the project's held-out detector evaluation split. Do not describe it as BDD100K's official test set.
+- The official test images are unlabelled; do not use them for metric calculation.
 - Keep images from the same source video in only one split wherever source-video identifiers are available. This prevents near-duplicate frames leaking between training and evaluation.
 - For tracking, preserve the official video/sequence split; never split individual frames from one sequence across train and validation.
 
@@ -68,7 +72,7 @@ The exact split sizes will be recorded after inspecting the downloaded annotatio
 5. Convert coordinates carefully and test the conversion by rendering sample overlays.
 6. Resize/letterbox to 640×640 for the first baseline while preserving aspect ratio.
 7. Apply training-only augmentation: horizontal flip where appropriate, modest scale/translation, brightness/contrast and HSV changes. Avoid transformations that make road scenes unrealistic.
-8. Do not augment validation/test data.
+8. Do not augment validation or held-out evaluation data.
 9. Calculate per-class object counts and box-size distributions before training. Address rare motorcycle/bus/truck examples through sampling or loss configuration only after measuring the imbalance.
 10. Keep raw data outside Git. Commit only scripts, manifests, documentation and small non-sensitive examples permitted by the dataset terms.
 
@@ -96,7 +100,9 @@ Project action:
 
 ## 7. P5 dataset acceptance criteria
 
-- [ ] Official dataset and license sources recorded.
+- [x] Primary dataset decision recorded: BDD100K.
+- [x] Supplementary MIO-TCD explicitly deferred as optional, not part of the initial baseline.
+- [x] Official dataset and license sources recorded.
 - [ ] Four project classes mapped and verified against annotations.
 - [ ] Detection and tracking subsets identified separately.
 - [ ] Split strategy prevents sequence leakage.
@@ -104,4 +110,4 @@ Project action:
 - [ ] Dataset size, class counts and corrupt/missing-file report captured after download.
 - [ ] Dataset is not committed to Git.
 
-**Status:** BDD100K is recommended, not yet downloaded or validated in this phase. Actual annotation counts and conversion correctness remain to be verified during the first data-preparation task.
+**Status:** BDD100K is the owner-approved primary dataset. It has not been downloaded or validated. Actual annotation counts, class mapping in the selected label package, split integrity and conversion correctness remain to be verified during the data-preparation task. Actual annotation counts and conversion correctness remain to be verified during the first data-preparation task.
