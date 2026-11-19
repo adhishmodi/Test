@@ -110,4 +110,4 @@ Project action:
 - [ ] Dataset size, class counts and corrupt/missing-file report captured after download.
 - [ ] Dataset is not committed to Git.
 
-**Status:** BDD100K is the owner-approved primary dataset. It has not been downloaded or validated. Actual annotation counts, class mapping in the selected label package, split integrity and conversion correctness remain to be verified during the data-preparation task. Actual annotation counts and conversion correctness remain to be verified during the first data-preparation task.
+**Status:** BDD100K is the owner-approved primary dataset. It has not been downloaded or validated. Actual annotation counts, class mapping in the selected label package, split integrity and conversion correctness remain to be verified during the data-preparation task.
