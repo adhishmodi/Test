@@ -49,14 +49,14 @@ https://github.com/bdd100k/bdd100k/blob/master/doc/source/download.rst
 
 | Check | Current status | Evidence / next action |
 |---|---|---|
-| Official package listing | <span>Documented</span> | Official download documentation lists both required packages |
-| Package sizes | <span>Documented</span> | 5.3 GB images; 53 MB Detection 2020 labels |
-| Published archive checksums | <span>Documented</span> | MD5 values recorded above |
-| Live download endpoint | <span>Not verified</span> | Check access only after P5.2 approval |
-| Actual downloaded file sizes | <span>Not applicable</span> | No files downloaded |
-| MD5 verification | <span>Not executed</span> | Run after separately approved acquisition |
-| SHA-256 calculation | <span>Not executed</span> | Calculate after acquisition; official package table lists MD5, not SHA-256 |
-| Extracted storage requirement | <span>Unknown</span> | Measure after acquisition; compressed size is not extracted size |
+| Official package listing | Documented | Official download documentation lists both required packages |
+| Package sizes | Documented | 5.3 GB images; 53 MB Detection 2020 labels |
+| Published archive checksums | Documented | MD5 values recorded above |
+| Live download endpoint | Not verified | Check access only after P5.2 approval |
+| Actual downloaded file sizes | Not applicable | No files downloaded |
+| MD5 verification | Not executed | Run after separately approved acquisition |
+| SHA-256 calculation | Not executed | Calculate after acquisition; official package table lists MD5, not SHA-256 |
+| Extracted storage requirement | Unknown | Measure after acquisition; compressed size is not extracted size |
 
 **P5.2 gate:** Before acquisition, confirm the official endpoint is reachable and the approved packages can be retrieved. If the endpoint is unavailable or requires unexpected access, stop and report the blocker rather than switching to an unofficial mirror without review.
 
