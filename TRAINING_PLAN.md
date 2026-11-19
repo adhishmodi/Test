@@ -4,7 +4,7 @@
 |---|---|
 | Project | Intelligent Traffic Monitoring System |
 | Phase | P5 — Dataset Research and Model Baseline |
-| Status | Proposed; no training has been run |
+| Status | Owner-approved plan; no training has been run |
 | Training environment | Google Colab GPU |
 | Dataset | BDD100K labelled images (see DATASET_RESEARCH.md) |
 | Initial detector | YOLOX-S (see MODEL_BASELINE.md) |
@@ -15,11 +15,11 @@
 2. Mount Google Drive for dataset/checkpoint persistence. Do not store large datasets or model weights in Git.
 3. Download only the approved BDD100K image and detection-label packages. Verify checksums and retain the dataset license.
 4. Run annotation validation and conversion; render random samples with bounding boxes and class labels.
-5. Create fixed train/validation/test manifests using the strategy in DATASET_RESEARCH.md.
+5. Create fixed training, internal-validation and held-out project-evaluation manifests using the strategy in DATASET_RESEARCH.md. The official BDD100K test images are unlabelled and are not the project's metric-evaluation split.
 6. Run a short smoke test to catch path, class-map, memory and loss issues.
 7. Train YOLOX-S from the approved COCO-pretrained checkpoint.
 8. Select the checkpoint using validation metrics only.
-9. Evaluate once on the untouched held-out test split.
+9. Evaluate once on the untouched held-out project-evaluation split (the labelled BDD100K validation split described in DATASET_RESEARCH.md).
 10. Save metrics, configuration, logs, environment information and checkpoint checksum to Drive.
 
 ## 2. Initial configuration
@@ -53,7 +53,7 @@ Apply augmentation only to training data:
 - Mild HSV/brightness/contrast variation.
 - YOLOX-supported Mosaic and MixUp where appropriate.
 
-Do not use vertical flips or aggressive transformations that create implausible road scenes. Keep validation and test images unchanged. If augmentation causes poor small-object localization or unrealistic samples, reduce its strength and document the change.
+Do not use vertical flips or aggressive transformations that create implausible road scenes. Keep validation and held-out evaluation images unchanged. If augmentation causes poor small-object localization or unrealistic samples, reduce its strength and document the change.
 
 ## 4. Class imbalance
 
@@ -65,7 +65,7 @@ If imbalance is substantial:
 3. Consider class-aware sampling or loss adjustments only after the baseline.
 4. Report per-class AP/recall so overall mAP does not hide weak minority-class performance.
 
-Do not duplicate validation/test examples or move samples between splits to improve reported metrics.
+Do not duplicate validation or held-out evaluation examples, or move samples between splits to improve reported metrics.
 
 ## 5. Validation and checkpoint selection
 
@@ -73,8 +73,8 @@ Do not duplicate validation/test examples or move samples between splits to impr
 - Save the checkpoint with the best validation metric (record which metric is used).
 - Monitor per-class AP, precision/recall and validation loss.
 - Check for overfitting by comparing training and validation curves.
-- Do not tune hyperparameters on the held-out test set.
-- Run the final test evaluation once the configuration is frozen.
+- Do not tune hyperparameters on the held-out project-evaluation split.
+- Run the final held-out project-evaluation once the configuration is frozen.
 
 If the training framework does not implement early stopping, use a fixed epoch budget and best-validation-checkpoint selection rather than claiming automatic early stopping.
 
@@ -104,7 +104,7 @@ For every run, record:
 - GPU model, VRAM, image size, batch size and epoch count.
 - Optimizer, learning rate, scheduler, augmentation and precision settings.
 - Best epoch and validation metrics.
-- Final held-out test metrics.
+- Final held-out project-evaluation metrics.
 - Inference latency/FPS measurement conditions.
 
 ## 8. Outputs and storage
@@ -130,8 +130,8 @@ P5 can be closed when the dataset/model choices, preprocessing design, training 
 - [ ] Smoke-test configuration and full baseline configuration are saved.
 - [ ] Training run can be resumed from persistent checkpoints.
 - [ ] Best-checkpoint selection uses validation data only.
-- [ ] Held-out test metrics are not used for tuning.
+- [ ] Held-out project-evaluation metrics are not used for tuning.
 - [ ] Model/data/package licenses are reviewed before distribution.
 - [ ] No training has been claimed as complete until logs and outputs exist.
 
-**Status:** Planning only. No dataset download, dependency installation, model training or benchmark execution was performed while preparing this document.
+**Status:** The owner-approved plan targets BDD100K and YOLOX-S. It remains planning only. MIO-TCD is optional and excluded from the initial baseline. No dataset download, dependency installation, model training or benchmark execution was performed while preparing this document.

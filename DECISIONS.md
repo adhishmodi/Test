@@ -195,20 +195,30 @@ The following records capture design proposals documented in P3. Items explicitl
 
 ### ADR-023 — Primary dataset: BDD100K
 
-- **Status:** Recommended; owner confirmation and data validation pending
+- **Status:** Owner-approved primary dataset; data validation pending
 - **Decision:** Use BDD100K labelled images as the initial detector fine-tuning dataset. Use its separate MOT 2020 subset for later tracking evaluation.
 - **Rationale:** Urban driving scenes, all four required vehicle categories, weather/time-of-day diversity, and dedicated tracking annotations.
 - **Alternatives:** MS COCO 2017 (general scenes, not traffic-specific) and KITTI (does not directly cover the complete four-class requirement).
 - **Conditions:** Dataset terms are separate from toolkit-code licensing. Educational/research/not-for-profit use is permitted subject to stated terms; obtain permission before commercial use or redistribution. Validate actual annotation counts, splits and class mapping after download.
-- **Consequences:** Do not commit dataset media/labels to Git. Keep the official license notice and record source/checksums.
+- **Consequences:** Do not commit dataset media/labels to Git. Keep the official license notice and record source/checksums. MIO-TCD is optional for a later, separately reviewed experiment and is excluded from the initial baseline.
 
-### ADR-024 — Detector and tracker baseline candidates
+### ADR-024 — Detector and tracker baseline
 
-- **Status:** Recommended baseline; benchmark and exact checkpoint/license verification pending
-- **Decision:** Start with YOLOX-S (PyTorch) initialized from an official COCO-pretrained checkpoint; use ByteTrack as the initial tracker candidate. Compare RT-DETRv2-R18 as a detector alternative.
+- **Status:** Owner-approved initial detector baseline; pilot and exact checkpoint/license verification pending
+- **Decision:** Select YOLOX-S (PyTorch) as the initial detector baseline, initialized from a verified COCO-pretrained checkpoint; use ByteTrack as the initial tracker candidate. RT-DETRv2-R18 remains an optional detector comparison.
 - **Rationale:** YOLOX has a PyTorch implementation, custom-dataset training guidance and an Apache-2.0 repository license; ByteTrack provides a comparatively simple tracking baseline.
 - **Alternatives:** RT-DETRv2-R18; Ultralytics YOLO family.
 - **Conditions:** Verify exact checkpoint, pretrained-data, package and dependency terms independently. Ultralytics licensing is not assumed acceptable; its current default AGPL-3.0 obligations must be reviewed.
-- **Consequences:** Do not install dependencies, train, export or distribute weights until the owner approves the implementation batch and license checks are complete.
+- **Consequences:** The YOLOX-S baseline choice is approved for planning. Do not install dependencies, train, export or distribute weights until a separate implementation batch is approved and the required compatibility and license checks are complete.
 
-**P5 status:** Research documents added. Recommendations remain subject to owner review; no training or implementation is authorized by these ADRs.
+### P5 owner decision record — 2026-11-19
+
+The project owner confirmed:
+- Primary dataset: BDD100K.
+- Primary detector baseline: YOLOX-S.
+- Supplementary dataset: optional; MIO-TCD is excluded from the initial baseline and may be reconsidered only through a separate review.
+- Initial tracker candidate remains ByteTrack.
+
+These decisions approve the research direction and documentation only. Dataset validation, checkpoint/package license verification, Colab compatibility testing and pilot benchmarking remain outstanding.
+
+**P5 status:** Dataset and initial detector baseline decisions approved. No dataset download, dependency installation, model training, application implementation, PR merge or deployment is authorized by this record.
