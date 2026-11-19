@@ -4,12 +4,12 @@
 |---|---|
 | Project | Intelligent Traffic Monitoring System |
 | Phase | P5 — Dataset Research and Model Baseline |
-| Status | Recommended baseline; final lock follows pilot benchmark and owner confirmation |
+| Status | Owner-selected detector baseline; pilot and license checks pending |
 | Research date | 2026-11-18 |
 
 ## 1. Recommendation
 
-**Primary detector candidate: YOLOX-S (PyTorch implementation), initialized from the official COCO-pretrained checkpoint and fine-tuned on the four BDD100K vehicle classes.**
+**Owner decision (2026-11-19): select YOLOX-S (PyTorch implementation) as the initial detector baseline, initialized from a verified COCO-pretrained checkpoint and fine-tuned on the four BDD100K vehicle classes.**
 
 Why:
 - The official repository provides a PyTorch implementation and custom-dataset training instructions.
@@ -17,7 +17,7 @@ Why:
 - YOLOX provides smaller Nano/Tiny/Small variants, custom training examples and export paths.
 - YOLOX-S is a practical starting point for a student project using a Google Colab GPU, without beginning with a large detector.
 
-This is a recommended experiment baseline, not a claim that YOLOX-S is the most accurate model. Confirm the exact checkpoint provenance and its terms before distributing weights.
+This is the selected starting baseline for the project, not a claim that YOLOX-S is the most accurate model or the final production model. The pilot must verify code/runtime compatibility, dataset conversion, checkpoint provenance and applicable terms before a full training run or any weight distribution.
 
 ## 2. Detector comparison
 
@@ -70,7 +70,7 @@ The ByteTrack repository is MIT-licensed; preserve its license notice. Confirm t
 
 ### 4.1 Detection
 
-Evaluate YOLOX-S and RT-DETRv2-R18 on the same BDD100K four-class split.
+Evaluate the selected YOLOX-S baseline on the fixed BDD100K four-class split. RT-DETRv2-R18 remains an optional comparison if the pilot results, available compute and project schedule justify it.
 
 Report:
 - Precision and recall.
@@ -112,24 +112,24 @@ Use the same detector outputs when comparing trackers so the tracker comparison 
 
 ## 5. Baseline decision gates
 
-The primary candidate can be locked only after:
+YOLOX-S is selected as the initial baseline. A trained model can be accepted for application integration only after:
 - Custom-data training completes without data/label errors.
 - Per-class validation metrics are available.
 - The model runs on a representative image and video.
 - Runtime is measured on the available Colab GPU and on the intended inference environment.
 - Exact package, checkpoint and dataset license terms are recorded.
-- YOLOX-S is compared with RT-DETRv2-R18 or a documented reason is given if the second candidate cannot be tested.
+- The pilot and measured results are reviewed. A second-detector comparison is optional, not a prerequisite for beginning the YOLOX-S baseline.
 
 **No accuracy target is pre-declared.** Establish a project target after the first reproducible baseline results are available.
 
 ## 6. P5 acceptance criteria
 
-- [ ] Primary detector candidate and alternative documented.
+- [x] Owner-selected primary detector baseline (YOLOX-S) and alternative documented.
 - [ ] Repository, model checkpoint and dataset licenses distinguished.
 - [ ] Tracking candidate and alternatives documented.
 - [ ] Detection, tracking, counting and congestion metrics defined.
 - [ ] Fair benchmark conditions specified.
-- [ ] Model choice remains conditional on pilot training and measurements.
+- [x] YOLOX-S baseline decision recorded; final trained-model acceptance remains conditional on pilot results and measurements.
 - [ ] No model package or dependency has been installed as part of this research document.
 
-**Status:** YOLOX-S + ByteTrack is the recommended starting combination. Final selection remains subject to the benchmark and licensing gates above.
+**Status:** YOLOX-S is the owner-selected initial detector baseline; ByteTrack remains the initial tracker candidate. Pilot validation, runtime compatibility and exact checkpoint/package license checks remain outstanding. No training or dependency installation has been performed.
